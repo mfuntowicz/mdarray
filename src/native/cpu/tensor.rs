@@ -1,6 +1,7 @@
 use crate::core::{Dimension, Factory};
 use num_traits::Num;
 use smallvec::SmallVec;
+use std::mem::size_of;
 
 #[derive(Debug, Clone)]
 pub struct Tensor<T: Num + Sized + Copy> {
@@ -94,11 +95,46 @@ impl<T: Num + Sized + Copy> Factory<T> for Tensor<T> {
 }
 
 impl<T: Num + Sized + Copy> Dimension for Tensor<T> {
+    /// # Examples
+    ///
+    /// ```
+    /// use mdarray::native::cpu::Tensor;
+    /// use mdarray::core::{Factory, Dimension};
+    ///
+    /// let tensor = Tensor::<f32>::ones(&[2, 5]);
+    /// println!("Tensor's axes definition is {}", tensor.shape());
+    /// ```
     fn shape(&self) -> &[usize] {
         &self.shape
     }
 
+    /// # Examples
+    ///
+    /// ```
+    /// use mdarray::native::cpu::Tensor;
+    /// use mdarray::core::{Factory, Dimension};
+    ///
+    /// let tensor = Tensor::<f32>::ones(&[2, 5]);
+    /// println!("Tensor requires {} bytes", tensor.size());
+    /// ```
     fn size(&self) -> usize {
+        self.numel() * size_of::<T>()
+    }
+
+    /// Return the flattened number of element contained in the tensor
+    ///
+    /// returns: usize total number of element in this tensor
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use mdarray::native::cpu::Tensor;
+    /// use mdarray::core::{Factory, Dimension};
+    ///
+    /// let tensor = Tensor::<f32>::ones(&[2, 5]);
+    /// println!("Tensor has {} elements", tensor.numel());
+    /// ```
+    fn numel(&self) -> usize {
         self.shape.iter().product()
     }
 }
@@ -140,6 +176,7 @@ mod tests {
     mod dimension {
         use crate::core::{Dimension, Factory};
         use crate::native::cpu::tensor::{DoubleTensor, FloatTensor};
+        use std::mem::size_of;
 
         #[test]
         pub fn test_shape() {
@@ -153,10 +190,19 @@ mod tests {
         #[test]
         pub fn test_size() {
             let t = FloatTensor::fill(5f32, &[4, 16]);
-            assert_eq!(t.size(), (4 * 16) as usize);
+            assert_eq!(t.size(), (4 * 16) * size_of::<f32>());
 
             let t = DoubleTensor::fill(5f64, &[4, 16]);
-            assert_eq!(t.shape(), [4_usize, 16_usize]);
+            assert_eq!(t.size(), (4 * 16) * size_of::<f64>());
+        }
+
+        #[test]
+        pub fn test_numel() {
+            let t = FloatTensor::fill(5f32, &[4, 16]);
+            assert_eq!(t.numel(), (4 * 16));
+
+            let t = DoubleTensor::fill(5f64, &[4, 16]);
+            assert_eq!(t.numel(), (4 * 16));
         }
     }
 }

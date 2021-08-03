@@ -8,4 +8,9 @@ pub trait Dimension {
     ///
     /// returns: usize size in byte used to store the tensor in memory
     fn size(&self) -> usize;
+
+    /// Return the flattened number of element contained in the tensor
+    ///
+    /// returns: usize total number of element in this tensor
+    fn numel(&self) -> usize;
 }
