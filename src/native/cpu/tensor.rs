@@ -133,10 +133,10 @@ mod tests {
         #[test]
         pub fn test_shape() {
             let t = FloatTensor::fill(5f32, &vec![4, 16]);
-            assert_eq!(t.shape(), [4 as usize, 16 as usize]);
+            assert_eq!(t.shape(), [4_usize, 16_usize]);
 
             let t = DoubleTensor::fill(5f64, &vec![4, 16]);
-            assert_eq!(t.shape(), [4 as usize, 16 as usize]);
+            assert_eq!(t.shape(), [4_usize, 16_usize]);
         }
 
         #[test]
@@ -145,7 +145,7 @@ mod tests {
             assert_eq!(t.size(), (4 * 16) as usize);
 
             let t = DoubleTensor::fill(5f64, &vec![4, 16]);
-            assert_eq!(t.shape(), [4 as usize, 16 as usize]);
+            assert_eq!(t.shape(), [4_usize, 16_usize]);
         }
     }
 }
