@@ -95,7 +95,6 @@ impl<T: Num + Sized + Copy> Factory<T> for Tensor<T> {
 }
 
 impl<T: Num + Sized + Copy> Dimension for Tensor<T> {
-
     /// # Examples
     ///
     /// ```
@@ -118,7 +117,9 @@ impl<T: Num + Sized + Copy> Dimension for Tensor<T> {
     /// let tensor = Tensor::<f32>::ones(&[2, 5]);
     /// println!("Tensor requires {} bytes", tensor.size());
     /// ```
-    fn size(&self) -> usize { self.numel() * size_of::<T>() }
+    fn size(&self) -> usize {
+        self.numel() * size_of::<T>()
+    }
 
     /// Return the flattened number of element contained in the tensor
     ///
@@ -133,7 +134,9 @@ impl<T: Num + Sized + Copy> Dimension for Tensor<T> {
     /// let tensor = Tensor::<f32>::ones(&[2, 5]);
     /// println!("Tensor has {} elements", tensor.numel());
     /// ```
-    fn numel(&self) -> usize { self.shape.iter().product() }
+    fn numel(&self) -> usize {
+        self.shape.iter().product()
+    }
 }
 
 #[cfg(test)]
