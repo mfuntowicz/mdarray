@@ -121,10 +121,10 @@ mod tests {
         #[test]
         pub fn test_zeros() {
             let t = FloatTensor::zeros(&[4, 16]);
-            assert!((t.data.iter().sum::<f32>() - 4f32 * 16f32).abs() < f32::EPSILON);
+            assert!(t.data.iter().sum::<f32>() < f32::EPSILON);
 
             let t = DoubleTensor::zeros(&[4, 16]);
-            assert!((t.data.iter().sum::<f64>() - 4f64 * 16f64).abs() < f64::EPSILON);
+            assert!(t.data.iter().sum::<f64>() < f64::EPSILON);
         }
 
         #[test]
