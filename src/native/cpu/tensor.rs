@@ -112,28 +112,28 @@ mod tests {
         #[test]
         pub fn test_ones() {
             let t = FloatTensor::ones(&[4, 16]);
-            assert_eq!(t.data.iter().sum::<f32>(), 4f32 * 16f32);
+            assert!((t.data.iter().sum::<f32>() - 4f32 * 16f32) < f32::EPSILON);
 
             let t = DoubleTensor::ones(&[4, 16]);
-            assert_eq!(t.data.iter().sum::<f64>(), 4f64 * 16f64);
+            assert!((t.data.iter().sum::<f64>() - 4f64 * 16f64) < f64::EPSILON);
         }
 
         #[test]
         pub fn test_zeros() {
             let t = FloatTensor::zeros(&[4, 16]);
-            assert_eq!(t.data.iter().sum::<f32>(), 0.0);
+            assert!((t.data.iter().sum::<f32>() - 4f32 * 16f32) < f32::EPSILON);
 
             let t = DoubleTensor::zeros(&[4, 16]);
-            assert_eq!(t.data.iter().sum::<f64>(), 0.0);
+            assert!((t.data.iter().sum::<f64>() - 4f64 * 16f64) < f64::EPSILON);
         }
 
         #[test]
         pub fn test_fill() {
             let t = FloatTensor::fill(5f32, &[4, 16]);
-            assert_eq!(t.data.iter().sum::<f32>(), 5f32 * 4f32 * 16f32);
+            assert!((t.data.iter().sum::<f32>() - 5f32 * 4f32 * 16f32) < f32::EPSILON);
 
             let t = DoubleTensor::fill(5f64, &[4, 16]);
-            assert_eq!(t.data.iter().sum::<f64>(), 5f64 * 4f64 * 16f64);
+            assert!((t.data.iter().sum::<f64>() - 5f64 * 4f64 * 16f64) < f64::EPSILON);
         }
     }
 
