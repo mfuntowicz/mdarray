@@ -95,13 +95,45 @@ impl<T: Num + Sized + Copy> Factory<T> for Tensor<T> {
 }
 
 impl<T: Num + Sized + Copy> Dimension for Tensor<T> {
+
+    /// # Examples
+    ///
+    /// ```
+    /// use mdarray::native::cpu::Tensor;
+    /// use mdarray::core::{Factory, Dimension};
+    ///
+    /// let tensor = Tensor::<f32>::ones(&[2, 5]);
+    /// println!("Tensor's axes definition is {}", tensor.shape());
+    /// ```
     fn shape(&self) -> &[usize] {
         &self.shape
     }
 
-    fn size(&self) -> usize {
-        self.shape.iter().product::<usize>() * size_of::<T>()
-    }
+    /// # Examples
+    ///
+    /// ```
+    /// use mdarray::native::cpu::Tensor;
+    /// use mdarray::core::{Factory, Dimension};
+    ///
+    /// let tensor = Tensor::<f32>::ones(&[2, 5]);
+    /// println!("Tensor requires {} bytes", tensor.size());
+    /// ```
+    fn size(&self) -> usize { self.numel() * size_of::<T>() }
+
+    /// Return the flattened number of element contained in the tensor
+    ///
+    /// returns: usize total number of element in this tensor
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use mdarray::native::cpu::Tensor;
+    /// use mdarray::core::{Factory, Dimension};
+    ///
+    /// let tensor = Tensor::<f32>::ones(&[2, 5]);
+    /// println!("Tensor has {} elements", tensor.numel());
+    /// ```
+    fn numel(&self) -> usize { self.shape.iter().product() }
 }
 
 #[cfg(test)]
@@ -159,6 +191,15 @@ mod tests {
 
             let t = DoubleTensor::fill(5f64, &[4, 16]);
             assert_eq!(t.size(), (4 * 16) * size_of::<f64>());
+        }
+
+        #[test]
+        pub fn test_numel() {
+            let t = FloatTensor::fill(5f32, &[4, 16]);
+            assert_eq!(t.numel(), (4 * 16));
+
+            let t = DoubleTensor::fill(5f64, &[4, 16]);
+            assert_eq!(t.numel(), (4 * 16));
         }
     }
 }
