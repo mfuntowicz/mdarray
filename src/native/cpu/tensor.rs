@@ -1,11 +1,11 @@
-use num_traits::{Num};
+use crate::core::{Dimension, Factory};
+use num_traits::Num;
 use smallvec::SmallVec;
-use crate::core::{Factory, Dimension};
 
 #[derive(Debug, Clone)]
 pub struct Tensor<T: Num + Sized + Copy> {
     data: Vec<T>,
-    shape: SmallVec<[usize; 5]>
+    shape: SmallVec<[usize; 5]>,
 }
 
 type FloatTensor = Tensor<f32>;
@@ -15,9 +15,7 @@ type UIntTensor = Tensor<u32>;
 type LongTensor = Tensor<i64>;
 type ULongTensor = Tensor<u64>;
 
-
-impl <T: Num + Sized + Copy> Factory<T> for Tensor<T> {
-
+impl<T: Num + Sized + Copy> Factory<T> for Tensor<T> {
     /// Allocate a new multi-dimensional array with all elements filled with `value`.
     ///
     /// # Arguments
@@ -39,7 +37,7 @@ impl <T: Num + Sized + Copy> Factory<T> for Tensor<T> {
         let numel = shape.iter().product();
         Tensor {
             data: vec![value; numel],
-            shape: SmallVec::from(shape)
+            shape: SmallVec::from(shape),
         }
     }
 
@@ -84,8 +82,7 @@ impl <T: Num + Sized + Copy> Factory<T> for Tensor<T> {
     }
 }
 
-
-impl <T: Num + Sized + Copy> Dimension for Tensor<T> {
+impl<T: Num + Sized + Copy> Dimension for Tensor<T> {
     fn shape(&self) -> &[usize] {
         &self.shape
     }
@@ -95,12 +92,11 @@ impl <T: Num + Sized + Copy> Dimension for Tensor<T> {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     mod allocator {
-        use crate::native::cpu::tensor::{DoubleTensor, FloatTensor};
         use crate::core::Factory;
+        use crate::native::cpu::tensor::{DoubleTensor, FloatTensor};
 
         #[test]
         pub fn test_ones() {
@@ -131,8 +127,8 @@ mod tests {
     }
 
     mod dimension {
-        use crate::native::cpu::tensor::{DoubleTensor, FloatTensor};
         use crate::core::{Dimension, Factory};
+        use crate::native::cpu::tensor::{DoubleTensor, FloatTensor};
 
         #[test]
         pub fn test_shape() {
@@ -152,5 +148,4 @@ mod tests {
             assert_eq!(t.shape(), [4 as usize, 16 as usize]);
         }
     }
-
 }
