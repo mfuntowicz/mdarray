@@ -10,6 +10,10 @@ pub struct Tensor<T: Num + Sized + Copy> {
 
 type FloatTensor = Tensor<f32>;
 type DoubleTensor = Tensor<f64>;
+type IntTensor = Tensor<i32>;
+type UIntTensor = Tensor<u32>;
+type LongTensor = Tensor<i64>;
+type ULongTensor = Tensor<u64>;
 
 
 impl <T: Num + Sized + Copy> Factory<T> for Tensor<T> {
@@ -81,9 +85,19 @@ impl <T: Num + Sized + Copy> Factory<T> for Tensor<T> {
 }
 
 
+impl <T: Num + Sized + Copy> Dimension for Tensor<T> {
+    fn shape(&self) -> &[usize] {
+        &self.shape
+    }
+
+    fn size(&self) -> usize {
+        self.shape.iter().product()
+    }
+}
+
+
 #[cfg(test)]
 mod tests {
-
     mod allocator {
         use crate::native::cpu::tensor::{DoubleTensor, FloatTensor};
         use crate::core::Factory;
@@ -115,4 +129,28 @@ mod tests {
             assert_eq!(t.data.iter().sum::<f64>(), 5f64 * 4f64 * 16f64);
         }
     }
+
+    mod dimension {
+        use crate::native::cpu::tensor::{DoubleTensor, FloatTensor};
+        use crate::core::{Dimension, Factory};
+
+        #[test]
+        pub fn test_shape() {
+            let t = FloatTensor::fill(5f32, &vec![4, 16]);
+            assert_eq!(t.shape(), [4 as usize, 16 as usize]);
+
+            let t = DoubleTensor::fill(5f64, &vec![4, 16]);
+            assert_eq!(t.shape(), [4 as usize, 16 as usize]);
+        }
+
+        #[test]
+        pub fn test_size() {
+            let t = FloatTensor::fill(5f32, &vec![4, 16]);
+            assert_eq!(t.size(), (4 * 16) as usize);
+
+            let t = DoubleTensor::fill(5f64, &vec![4, 16]);
+            assert_eq!(t.shape(), [4 as usize, 16 as usize]);
+        }
+    }
+
 }
