@@ -1,0 +1,54 @@
+name: Rust - mdarray
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    env:
+      MACOSX_DEPLOYMENT_TARGET: 10.14
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Install Rust Stable
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          components: rustfmt, clippy
+          override: true
+
+      # Necessary for now for the cargo cache: https://github.com/actions/cache/issues/133#issuecomment-599102035
+      - if: matrix.os == 'ubuntu-latest'
+        run: sudo chown -R $(whoami):$(id -ng) ~/.cargo/
+
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --all-targets --verbose --manifest-path Cargo.toml
+
+      - name: Lint with RustFmt
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --manifest-path Cargo.toml -- --check
+
+      - name: Lint with Clippy
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: --manifest-path Cargo.toml --all-targets --all-features -- -D warnings
+
+      - name: Run Tests
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --verbose --manifest-path Cargo.toml --lib
