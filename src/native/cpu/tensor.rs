@@ -42,7 +42,7 @@ impl<T: Num + Sized + Copy> Factory<T> for Tensor<T> {
     /// use mdarray::native::cpu::Tensor;
     /// use mdarray::core::Factory;
     ///
-    /// let tensor = Tensor::<f32>::fill(5f32, &vec![32, 128]);
+    /// let tensor = Tensor::<f32>::fill(5f32, &[32, 128]);
     /// ```
     fn fill(value: T, shape: &[usize]) -> Self {
         let numel = shape.iter().product();
@@ -66,7 +66,7 @@ impl<T: Num + Sized + Copy> Factory<T> for Tensor<T> {
     /// use mdarray::native::cpu::Tensor;
     /// use mdarray::core::Factory;
     ///
-    /// let tensor = Tensor::<f32>::zeros(&vec![32, 128]);
+    /// let tensor = Tensor::<f32>::zeros(&[32, 128]);
     /// ```
     fn zeros(shape: &[usize]) -> Self {
         Self::fill(T::zero(), shape)
@@ -86,7 +86,7 @@ impl<T: Num + Sized + Copy> Factory<T> for Tensor<T> {
     /// use mdarray::native::cpu::Tensor;
     /// use mdarray::core::Factory;
     ///
-    /// let tensor = Tensor::<f32>::ones(&vec![32, 128]);
+    /// let tensor = Tensor::<f32>::ones(&[32, 128]);
     /// ```
     fn ones(shape: &[usize]) -> Self {
         Self::fill(T::one(), shape)
@@ -111,28 +111,28 @@ mod tests {
 
         #[test]
         pub fn test_ones() {
-            let t = FloatTensor::ones(&vec![4, 16]);
+            let t = FloatTensor::ones(&[4, 16]);
             assert_eq!(t.data.iter().sum::<f32>(), 4f32 * 16f32);
 
-            let t = DoubleTensor::ones(&vec![4, 16]);
+            let t = DoubleTensor::ones(&[4, 16]);
             assert_eq!(t.data.iter().sum::<f64>(), 4f64 * 16f64);
         }
 
         #[test]
         pub fn test_zeros() {
-            let t = FloatTensor::zeros(&vec![4, 16]);
+            let t = FloatTensor::zeros(&[4, 16]);
             assert_eq!(t.data.iter().sum::<f32>(), 0.0);
 
-            let t = DoubleTensor::zeros(&vec![4, 16]);
+            let t = DoubleTensor::zeros(&[4, 16]);
             assert_eq!(t.data.iter().sum::<f64>(), 0.0);
         }
 
         #[test]
         pub fn test_fill() {
-            let t = FloatTensor::fill(5f32, &vec![4, 16]);
+            let t = FloatTensor::fill(5f32, &[4, 16]);
             assert_eq!(t.data.iter().sum::<f32>(), 5f32 * 4f32 * 16f32);
 
-            let t = DoubleTensor::fill(5f64, &vec![4, 16]);
+            let t = DoubleTensor::fill(5f64, &[4, 16]);
             assert_eq!(t.data.iter().sum::<f64>(), 5f64 * 4f64 * 16f64);
         }
     }
@@ -143,19 +143,19 @@ mod tests {
 
         #[test]
         pub fn test_shape() {
-            let t = FloatTensor::fill(5f32, &vec![4, 16]);
+            let t = FloatTensor::fill(5f32, &[4, 16]);
             assert_eq!(t.shape(), [4_usize, 16_usize]);
 
-            let t = DoubleTensor::fill(5f64, &vec![4, 16]);
+            let t = DoubleTensor::fill(5f64, &[4, 16]);
             assert_eq!(t.shape(), [4_usize, 16_usize]);
         }
 
         #[test]
         pub fn test_size() {
-            let t = FloatTensor::fill(5f32, &vec![4, 16]);
+            let t = FloatTensor::fill(5f32, &[4, 16]);
             assert_eq!(t.size(), (4 * 16) as usize);
 
-            let t = DoubleTensor::fill(5f64, &vec![4, 16]);
+            let t = DoubleTensor::fill(5f64, &[4, 16]);
             assert_eq!(t.shape(), [4_usize, 16_usize]);
         }
     }
