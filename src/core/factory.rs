@@ -1,6 +1,6 @@
 use num_traits::Num;
 
-pub trait Factory<T: Num + Clone> {
+pub trait Factory<T: Num + Copy> {
     /// Allocate a new multi-dimensional array with all elements filled with `value`.
     ///
     /// # Arguments
