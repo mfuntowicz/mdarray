@@ -1,6 +1,7 @@
 use crate::core::{Dimension, Factory};
 use num_traits::Num;
 use smallvec::SmallVec;
+use std::mem::size_of;
 
 #[derive(Debug, Clone)]
 pub struct Tensor<T: Num + Sized + Copy> {
@@ -99,7 +100,7 @@ impl<T: Num + Sized + Copy> Dimension for Tensor<T> {
     }
 
     fn size(&self) -> usize {
-        self.shape.iter().product()
+        self.shape.iter().product::<usize>() * size_of::<T>()
     }
 }
 
@@ -140,6 +141,7 @@ mod tests {
     mod dimension {
         use crate::core::{Dimension, Factory};
         use crate::native::cpu::tensor::{DoubleTensor, FloatTensor};
+        use std::mem::size_of;
 
         #[test]
         pub fn test_shape() {
@@ -153,10 +155,10 @@ mod tests {
         #[test]
         pub fn test_size() {
             let t = FloatTensor::fill(5f32, &[4, 16]);
-            assert_eq!(t.size(), (4 * 16) as usize);
+            assert_eq!(t.size(), (4 * 16) * size_of::<f32>());
 
             let t = DoubleTensor::fill(5f64, &[4, 16]);
-            assert_eq!(t.shape(), [4_usize, 16_usize]);
+            assert_eq!(t.size(), (4 * 16) * size_of::<f64>());
         }
     }
 }
