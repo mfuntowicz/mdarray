@@ -8,11 +8,22 @@ pub struct Tensor<T: Num + Sized + Copy> {
     shape: SmallVec<[usize; 5]>,
 }
 
+#[allow(dead_code)]
 type FloatTensor = Tensor<f32>;
+
+#[allow(dead_code)]
 type DoubleTensor = Tensor<f64>;
+
+#[allow(dead_code)]
 type IntTensor = Tensor<i32>;
+
+#[allow(dead_code)]
 type UIntTensor = Tensor<u32>;
+
+#[allow(dead_code)]
 type LongTensor = Tensor<i64>;
+
+#[allow(dead_code)]
 type ULongTensor = Tensor<u64>;
 
 impl<T: Num + Sized + Copy> Factory<T> for Tensor<T> {
